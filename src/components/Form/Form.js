@@ -18,6 +18,22 @@ const ColorButton = withStyles(theme => ({
 
 class Form extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+          user_input: "https://defaultinput.com"
+        };
+      }
+    
+
+    handleChange = name => event => {
+
+        this.setState({
+            user_input: event.target.value
+          })
+
+      };
+
     render() {
         return (
             <div className="Form">
@@ -30,6 +46,7 @@ class Form extends Component {
                             margin="normal"
                             variant="outlined"
                             fullWidth
+                            onChange={this.handleChange('name')}
                         />
                     </Grid>
                     <Grid item xs={2}>
@@ -38,7 +55,7 @@ class Form extends Component {
                             variant="contained"
                             size="large"
                             color="primary"
-                            onClick={this.props.letsGo.bind(this, "gooddays")}
+                            onClick={this.props.letsGo.bind(this, this.state.user_input)}
                         >
                             Go!
                     </ColorButton>
