@@ -19,7 +19,7 @@ function Header() {
     <div className="Header">
     <MuiThemeProvider theme={theme}>
         <center>
-        <Typography variant="h3">v.redd.it-direct</Typography>
+        <Typography variant="h3">vreddit-direct</Typography>
         </center>
     </MuiThemeProvider>
     </div>
