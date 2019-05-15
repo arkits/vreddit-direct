@@ -1,35 +1,58 @@
 import React, { Component } from 'react';
+import {
+    MuiThemeProvider,
+    createMuiTheme
+  } from "@material-ui/core/styles";
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import './ResultCard.css';
+
+const theme = createMuiTheme({
+    typography: {
+      fontFamily: [
+        'IBM Plex Mono'
+      ].join(',')
+    },
+  });
+
 
 class ResultCard extends Component {
 
     render() {
 
-        return (
+        if (this.props.form_link === "placeholder") {
 
-            <Card className={this.card}>
+            return (
+                <MuiThemeProvider theme={theme}>
+                    <center>
+                        <Typography variant="h4">results will apear here...</Typography>
+                    </center>
+                </MuiThemeProvider>
+            );
 
-                <CardContent>
-                    <Typography className={Card.title} color="textSecondary" gutterBottom>
-                        ACTIVE
-                    </Typography>
-                    <Typography variant="h6">
-                        {this.props.form_link}
-                    </Typography>
-                </CardContent>
+        } else {
 
-                <CardActions>
-                    <Button size="small">View on Map</Button>
-                </CardActions>
-
-            </Card>
-        );
+            return (
+                <Card className={this.card}>
+                    <CardContent>
+                        <Typography className={Card.title} color="textSecondary" gutterBottom>
+                            720p
+                        </Typography>
+                        <Typography variant="h6">
+                            {this.props.form_link}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <Button size="small">Open</Button>
+                    </CardActions>
+                </Card>
+            );
+            
+        }
     }
 }
-
 
 export default ResultCard;

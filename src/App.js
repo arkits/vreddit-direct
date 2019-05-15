@@ -21,7 +21,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form_link: "yoo"
+      form_link: "placeholder"
     };
   }
 
