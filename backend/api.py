@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+###################################################################
+#                       vreddit-direct                            #
+#                        Archit Khode                             #
+###################################################################
+
+# TODO:
+# Move the checking to a different function?
+
 from flask import Flask, jsonify, make_response, request
 import json
 import util
@@ -9,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+# GET / or /status
 @app.route('/')
 @app.route('/status')
 def index():
@@ -19,10 +31,11 @@ def index():
     }
     return jsonify(payload)
 
+# GET /direct
 @app.route('/direct')
 def direct():
 
-    # check if there is a link in request body
+    # Check if there is a link in request body
     if not request.json or not "link" in request.json:
         payload = {
             "status" : "BAD",
@@ -32,20 +45,19 @@ def direct():
 
     link = request.json["link"]
 
-    # check if link is https
+    # Check if link is HTTPS
     if link[4] != "s":
         logger.info("Link isn't HTTPS. Making it one...")
         link = "https" + link[4:]
         logger.info("New Link is: " + link)
 
-    # remove the last "/"
+    # Remove the last "/"
     if link[-1] == "/":
         logger.info("Link ends with a /. Removing it...")
         link = link[0:-1]
         logger.info("New Link is: " + link)
 
-    # check if link is vreddit link
-    # logger.info(link[0:18])
+    # Check if link is vreddit link
     if str(link[0:18]) == "https://v.redd.it/":
         logger.info("IS_VREDDIT_LINK")
         payload = util.director(link)
