@@ -55,7 +55,7 @@ class Form extends Component {
                             variant="contained"
                             size="large"
                             color="primary"
-                            onClick={this.props.letsGo.bind(this, this.state.user_input)}
+                            onClick={this.props.setFormLink.bind(this, this.state.user_input)}
                         >
                             Go!
                     </ColorButton>

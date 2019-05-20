@@ -22,12 +22,12 @@ class ResultCard extends Component {
 
     render() {
 
-        if (this.props.form_link === "placeholder") {
+        if (this.props.results === "placeholder") {
 
             return (
                 <MuiThemeProvider theme={theme}>
                     <center>
-                        <Typography variant="h4">results will apear here...</Typography>
+                        <Typography variant="h4">results got nothing</Typography>
                     </center>
                 </MuiThemeProvider>
             );
@@ -38,10 +38,10 @@ class ResultCard extends Component {
                 <Card className={this.card}>
                     <CardContent>
                         <Typography className={Card.title} color="textSecondary" gutterBottom>
-                            720p
+                            720p - ResultCard
                         </Typography>
                         <Typography variant="h6">
-                            {this.props.form_link}
+                            {this.props.results}
                         </Typography>
                     </CardContent>
                     <CardActions>
