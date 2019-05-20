@@ -10,6 +10,7 @@
 # Move the checking to a different function?
 
 from flask import Flask, jsonify, make_response, request
+from flask_cors import CORS
 import json
 import util
 import logging
@@ -19,6 +20,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+CORS(app)
 
 # GET / or /status
 @app.route('/')
