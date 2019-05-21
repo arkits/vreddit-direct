@@ -28,7 +28,7 @@ def director_with_id(video_id):
     link = "https://v.redd.it/" + video_id
     logger.info("link = " + link)
 
-    video_links = {}
+    video_links = []
 
     for suffix in video_suffixs:
         
@@ -42,7 +42,7 @@ def director_with_id(video_id):
             # If status was 200, then add to video_links
             if response.status_code == 200:
                 logger.info("GOOD: " + video_link)
-                video_links[suffix] = video_link
+                video_links.append(video_link)
             else:
                 logger.info("BAD: " + video_link)
         except: 
@@ -51,7 +51,7 @@ def director_with_id(video_id):
     if len(video_links) == 0:
         # bad stuff
         payload = {
-            "video_links" : {}
+            "video_links" : []
         }
         resp = make_response(jsonify(payload), 400)
     else:
