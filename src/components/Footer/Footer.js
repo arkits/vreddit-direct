@@ -17,13 +17,13 @@ class Footer extends Component {
             <div className="Footer">
                 <Container>
                 <Grid container spacing={1}>
-                    <Grid item xs={10}>
+                    <Grid item xs={8}>
                         <h4>
                             vreddit-direct <br />
-                            @arkits
+                            <a href="https://github.com/arkits">@arkits</a>
                         </h4>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <h4>
                         api_status: {this.props.api_status} <br />
                         api_version: {this.props.api_version}
@@ -31,8 +31,6 @@ class Footer extends Component {
                     </Grid>
                 </Grid>
                 </Container>
-
-
             </div>
         );
     }
