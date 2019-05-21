@@ -15,6 +15,7 @@
 
 import requests
 import logging
+from flask import jsonify, make_response
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -22,8 +23,9 @@ logger = logging.getLogger(__name__)
 
 video_suffixs = ["96", "360", "720"]
 
-def director(link):
+def director_with_id(video_id):
 
+    link = "https://v.redd.it/" + video_id
     logger.info("link = " + link)
 
     video_links = {}
@@ -45,9 +47,18 @@ def director(link):
                 logger.info("BAD: " + video_link)
         except: 
             pass
+            
+    if len(video_links) == 0:
+        # bad stuff
+        payload = {
+            "video_links" : {}
+        }
+        resp = make_response(jsonify(payload), 400)
+    else:
+        #good stuff
+        payload = {
+            "video_links" : video_links
+        }
+        resp = make_response(jsonify(payload), 200)
 
-    payload = {
-        "video_links" : video_links
-    }
-
-    return(payload)
+    return(resp)

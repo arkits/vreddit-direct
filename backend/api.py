@@ -29,50 +29,14 @@ def index():
     payload = {
         "service_name" : "vreddit_direct",
         "status" : "OK",
-        "version" : "v1"
+        "version" : "v1.1"
     }
     return jsonify(payload)
 
-# GET /direct
-@app.route('/direct')
-def direct():
-
-    # Check if there is a link in request body
-    if not request.json or not "link" in request.json:
-        payload = {
-            "status" : "BAD",
-            "message" : "NO_LINK_PROVIDED"
-        }
-        return make_response(jsonify(payload), 400)
-
-    link = request.json["link"]
-
-    # Check if link is HTTPS
-    if link[4] != "s":
-        logger.info("Link isn't HTTPS. Making it one...")
-        link = "https" + link[4:]
-        logger.info("New Link is: " + link)
-
-    # Remove the last "/"
-    if link[-1] == "/":
-        logger.info("Link ends with a /. Removing it...")
-        link = link[0:-1]
-        logger.info("New Link is: " + link)
-
-    # Check if link is vreddit link
-    if str(link[0:18]) == "https://v.redd.it/":
-        logger.info("IS_VREDDIT_LINK")
-        payload = util.director(link)
-        payload["status"] = "OK"
-        return make_response(jsonify(payload), 200)
-    else:
-        logger.info("NOT_VREDDIT_LINK")
-        payload = {
-            "status" : "BAD",
-            "message" : "NOT_VREDDIT_LINK"
-        }
-        return make_response(jsonify(payload), 400)
-
+@app.route('/direct/<video_id>')
+def direct_with_id(video_id):
+    resp = util.director_with_id(video_id)
+    return resp
 
 @app.errorhandler(404)
 def not_found(error):
@@ -84,7 +48,7 @@ def not_found(error):
 @app.errorhandler(400)
 def bad_request(error):
     payload = {
-        "status" : "BAD",
+        "status" : "BAD_REQUEST",
     }
     return make_response(jsonify(payload), 400)
 
