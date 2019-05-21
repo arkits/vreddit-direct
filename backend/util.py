@@ -31,6 +31,8 @@ def director_with_id(video_id):
     video_links = []
 
     for suffix in video_suffixs:
+
+        link_element = {}
         
         video_link = link + "/DASH_" + suffix
         logger.info("GETing: " + video_link)
@@ -42,7 +44,9 @@ def director_with_id(video_id):
             # If status was 200, then add to video_links
             if response.status_code == 200:
                 logger.info("GOOD: " + video_link)
-                video_links.append(video_link)
+                link_element["link"] = video_link
+                link_element["quality"] = suffix
+                video_links.append(link_element)
             else:
                 logger.info("BAD: " + video_link)
         except: 
