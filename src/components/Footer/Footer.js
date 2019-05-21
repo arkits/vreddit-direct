@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Grid from "@material-ui/core/Grid";
 import Container from '@material-ui/core/Container';
+import Link from '@material-ui/core/Link';
 
 class Footer extends Component {
 
@@ -20,7 +21,9 @@ class Footer extends Component {
                     <Grid item xs={8}>
                         <h4>
                             vreddit-direct <br />
-                            <a href="https://github.com/arkits">@arkits</a>
+                            <Link href="https://github.com/arkits" color="inherit">
+                                @arkits
+                            </Link>
                         </h4>
                     </Grid>
                     <Grid item xs={3}>
