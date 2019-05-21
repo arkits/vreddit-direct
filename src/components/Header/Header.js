@@ -19,7 +19,7 @@ function Header() {
     <div className="Header">
       <MuiThemeProvider theme={theme}>
         <center>
-          <Link href="/" color="inherit">
+          <Link href="https://arkits.github.io/vreddit-direct/" color="inherit">
             <Typography variant="h3">vreddit-direct</Typography>
           </Link>
         </center>
