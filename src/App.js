@@ -26,12 +26,12 @@ class App extends Component {
     super(props);
     this.state = {
       form_link: "",
-        video_links: [
-          {
-            link: "",
-            quality: ""
-          },
-        ],
+      video_links: [
+        {
+          link: "",
+          quality: ""
+        },
+      ],
       api_status: "NOT_CONNECTED",
       api_version: "v0",
     };
@@ -40,6 +40,12 @@ class App extends Component {
   processFormLink = (link) => {
 
     var video_id = link.substring(18);
+    
+    // remove the last '/'
+    if(video_id[video_id.length -1] === "/"){
+      video_id = video_id.substring(0, video_id.length - 1)
+    }
+    
     console.log("video_id=" + video_id);
 
     axios.get("https://vreddit-direct-api.herokuapp.com/direct/" + video_id).then(response => {
@@ -53,12 +59,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-
     axios.get("https://vreddit-direct-api.herokuapp.com").then(response => {
       this.setState({
         api_status: response.data.status,
         api_version: response.data.version
       });
+    }).catch(function (error) {
+      console.log(error);
     });
   }
 
@@ -67,7 +74,6 @@ class App extends Component {
       <div className="App">
         <MuiThemeProvider theme={theme}>
           <CssBaseline />
-
           <main>
             <Container>
               <Header />
@@ -75,40 +81,28 @@ class App extends Component {
                 form_link={this.state.form_link}
                 processFormLink={this.processFormLink}
               />
-
-              <br />
-              <br />
-
-              <Container maxWidth="sm">
-
-                <br />
-      <center>
-      <ResultCard
-                video_links={this.state.video_links}
-              />
-      </center>
-
-
-              </Container>
-
               <br /><br />
-
+              <Container maxWidth="sm">
+                <br />
+                <center>
+                  <ResultCard
+                    video_links={this.state.video_links}
+                  />
+                </center>
+              </Container>
+              <br /><br />
             </Container>
           </main>
-
           <footer>
             <Footer
               api_status={this.state.api_status}
               api_version={this.state.api_version}
             />
           </footer>
-
         </MuiThemeProvider>
-
       </div>
     );
   }
-
 }
 
 export default App;
