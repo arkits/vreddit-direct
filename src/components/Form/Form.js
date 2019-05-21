@@ -21,7 +21,7 @@ class Form extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          user_input: "https://defaultinput.com"
+          user_input: "https://v.redd.it/bkq3tykza0y21"
         };
       }
     
@@ -55,7 +55,7 @@ class Form extends Component {
                             variant="contained"
                             size="large"
                             color="primary"
-                            onClick={this.props.setFormLink.bind(this, this.state.user_input)}
+                            onClick={this.props.processFormLink.bind(this, this.state.user_input)}
                         >
                             Go!
                     </ColorButton>

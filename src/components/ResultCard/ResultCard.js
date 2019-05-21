@@ -1,57 +1,48 @@
 import React, { Component } from 'react';
-import {
-    MuiThemeProvider,
-    createMuiTheme
-  } from "@material-ui/core/styles";
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import blue from '@material-ui/core/colors/blue';
 
-const theme = createMuiTheme({
-    typography: {
-      fontFamily: [
-        'IBM Plex Mono'
-      ].join(',')
+const ColorButton = withStyles(theme => ({
+    root: {
+        color: theme.palette.getContrastText(blue[500]),
+        padding: '10px',
+        backgroundColor: blue[500],
+        '&:hover': {
+            backgroundColor: blue[700],
+        },
     },
-  });
-
-
+}))(Button);
 class ResultCard extends Component {
 
-    render() {
+  render() {
 
-        if (this.props.results === "placeholder") {
+    if (this.props.video_links[0].link === "") {
+      return (
+        <center>
+          <h3>results will be here</h3>
+        </center>
+      );
 
-            return (
-                <MuiThemeProvider theme={theme}>
-                    <center>
-                        <Typography variant="h4">results got nothing</Typography>
-                    </center>
-                </MuiThemeProvider>
-            );
+    } else {
+      
+      return this.props.video_links.map((video_link, key) => (
+        <div className="Results">
+                <ColorButton
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    href={video_link.link}
+                >
+                    {video_link.quality}p
+            </ColorButton>
+            <br></br>
+            <br></br>
+        </div>
+      ));
 
-        } else {
-
-            return (
-                <Card className={this.card}>
-                    <CardContent>
-                        <Typography className={Card.title} color="textSecondary" gutterBottom>
-                            720p - ResultCard
-                        </Typography>
-                        <Typography variant="h6">
-                            {this.props.results}
-                        </Typography>
-                    </CardContent>
-                    <CardActions>
-                        <Button size="small">Open</Button>
-                    </CardActions>
-                </Card>
-            );
-
-        }
     }
+  }
 }
 
 export default ResultCard;

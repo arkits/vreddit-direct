@@ -25,27 +25,39 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form_link: "placeholder",
-      results: "placeholder",
+      form_link: "",
+        video_links: [
+          {
+            link: "",
+            quality: ""
+          },
+        ],
       api_status: "NOT_CONNECTED",
       api_version: "v0",
     };
   }
 
-  setFormLink = (link) => {
-    console.log("setFormLink was called");
+  processFormLink = (link) => {
 
-    this.setState({
-      results: link
-    })
+    var video_id = link.substring(18);
+    console.log("video_id=" + video_id);
+
+    axios.get("https://vreddit-direct-api.herokuapp.com/direct/" + video_id).then(response => {
+      console.log("API Response ");
+      console.log(response.data.video_links);
+      this.setState({
+        video_links: response.data.video_links
+      });
+    });
+
   }
 
   componentDidMount() {
 
     axios.get("https://vreddit-direct-api.herokuapp.com").then(response => {
-      this.setState({ 
-        api_status : response.data.status, 
-        api_version : response.data.version 
+      this.setState({
+        api_status: response.data.status,
+        api_version: response.data.version
       });
     });
   }
@@ -57,33 +69,35 @@ class App extends Component {
           <CssBaseline />
 
           <main>
-          <Container>
-            <Header />
-            <Form
-              form_link={this.state.form_link}
-              setFormLink={this.setFormLink}
-            />
-
-            <br />
-            <br />
-
-            <Container maxWidth="sm">
-
-              <br />
-
-              <ResultCard
-                results={this.state.results}
+            <Container>
+              <Header />
+              <Form
+                form_link={this.state.form_link}
+                processFormLink={this.processFormLink}
               />
 
+              <br />
+              <br />
+
+              <Container maxWidth="sm">
+
+                <br />
+      <center>
+      <ResultCard
+                video_links={this.state.video_links}
+              />
+      </center>
+
+
+              </Container>
+
+              <br /><br />
+
             </Container>
-
-            <br /><br />
-
-          </Container>
           </main>
 
           <footer>
-            <Footer 
+            <Footer
               api_status={this.state.api_status}
               api_version={this.state.api_version}
             />
