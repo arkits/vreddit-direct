@@ -43,9 +43,15 @@ class App extends Component {
     
     // remove the last '/'
     if(video_id[video_id.length -1] === "/"){
-      video_id = video_id.substring(0, video_id.length - 1)
+      video_id = video_id.substring(0, video_id.length - 1);
     }
-    
+
+    // handle input - https://v.redd.it/<video_id>/DASHPlaylist.mpd
+    if(video_id.endsWith("/DASHPlaylist.mpd")){
+      var video_id_spilt = video_id.split("/DASHPlaylist.mpd");
+      video_id = video_id_spilt[0];
+    }
+
     console.log("video_id=" + video_id);
 
     axios.get("https://vreddit-direct-api.herokuapp.com/direct/" + video_id).then(response => {
