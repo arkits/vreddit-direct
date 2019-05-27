@@ -60,8 +60,12 @@ class App extends Component {
       this.setState({
         video_links: response.data.video_links
       });
+    }).catch(error => {
+      console.log(error);
+      this.setState({
+        video_links: "SOMETHING_WENT_WRONG"
+      });
     });
-
   }
 
   componentDidMount() {

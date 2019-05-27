@@ -23,8 +23,15 @@ class ResultCard extends Component {
           <h3>results will be here</h3>
         </center>
       );
-
-    } else {
+    } 
+    else if(this.props.video_links === "SOMETHING_WENT_WRONG"){
+      return (
+        <center>
+          <h3>SOMETHING_WENT_WRONG</h3>
+        </center>
+      );
+    }
+    else {
       
       return this.props.video_links.map((video_link, key) => (
         <div className="Results">
