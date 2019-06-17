@@ -21,7 +21,7 @@ from flask import jsonify, make_response
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-video_suffixs = ["96", "360", "720"]
+video_suffixs = ["96", "144", "360", "480", "720", "1080"]
 
 def director_with_id(video_id):
 

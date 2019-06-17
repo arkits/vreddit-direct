@@ -29,7 +29,7 @@ def index():
     payload = {
         "service_name" : "vreddit_direct",
         "status" : "OK",
-        "version" : "v1.3"
+        "version" : "v1.4"
     }
     return jsonify(payload)
 
