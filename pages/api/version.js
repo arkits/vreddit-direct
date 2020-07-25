@@ -1,3 +1,5 @@
+const allowCors = require('../../utils/cors');
+
 function getVersion(req, res) {
     res.json({
         name: 'vreddit-direct',
@@ -5,4 +7,4 @@ function getVersion(req, res) {
     });
 }
 
-module.exports = getVersion;
+module.exports = allowCors(getVersion);
