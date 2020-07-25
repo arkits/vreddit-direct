@@ -1,5 +1,0 @@
-Flask==1.0.2
-Flask-Cors==3.0.7
-python-dotenv==0.10.2
-requests==2.21.0
-gunicorn==19.9.0
