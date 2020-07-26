@@ -11,6 +11,8 @@ async function postMetadata(req, res) {
         if (!id) {
             throw new Error('invalid request - no id');
         }
+        id = id.trim();
+        console.log(`postDirect request for id=${id}`);
 
         let response = await axios.get(VREDDIT_PATH + id, {
             headers: { 'User-Agent': 'vreddit-direct/0.1.0 (http://vreddit.vercel.app/)' }

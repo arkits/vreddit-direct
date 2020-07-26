@@ -12,6 +12,7 @@ async function postDirect(req, res) {
         if (!id) {
             throw new Error('invalid request - no id');
         }
+        id = id.trim();
         console.log(`postDirect request for id=${id}`);
 
         let dashPlaylistUrl = VREDDIT_PATH + id + DASH_PLAYLIST_PATH;
@@ -21,6 +22,7 @@ async function postDirect(req, res) {
         let parsedDashPlaylist = xmlToJson(response.data);
 
         let adaptationSet = parsedDashPlaylist.MPD.Period.AdaptationSet;
+        console.log(JSON.stringify(adaptationSet, null, 2));
 
         // Determine Audio Channel URL
         let audioChannelUrl = getAudioChannelUrl(adaptationSet, id);
@@ -47,15 +49,17 @@ async function postDirect(req, res) {
 function getAudioChannelUrl(adaptationSet, id) {
     let audioChannelBaseUrl = null;
 
-    for (let representation of adaptationSet) {
-        if ('AudioChannelConfiguration' in representation.Representation) {
-            audioChannelBaseUrl = representation.Representation.BaseURL;
-            break;
+    if (Array.isArray(adaptationSet)) {
+        for (let representation of adaptationSet) {
+            if ('AudioChannelConfiguration' in representation.Representation) {
+                audioChannelBaseUrl = representation.Representation.BaseURL;
+                break;
+            }
         }
-    }
 
-    if (audioChannelBaseUrl !== null) {
-        return VREDDIT_PATH + id + '/' + audioChannelBaseUrl;
+        if (audioChannelBaseUrl !== null) {
+            return VREDDIT_PATH + id + '/' + audioChannelBaseUrl;
+        }
     }
 
     return null;
@@ -64,12 +68,21 @@ function getAudioChannelUrl(adaptationSet, id) {
 function getVideoChannelUrls(adaptationSet, id) {
     let videoChannelUrls = [];
 
-    for (let representation of adaptationSet) {
-        if (Array.isArray(representation.Representation)) {
-            let videoChannelRepresentations = representation.Representation;
-            for (let vcr of videoChannelRepresentations) {
-                videoChannelUrls.push(VREDDIT_PATH + id + '/' + vcr.BaseURL);
+    let videoChannelRepresentations = null;
+
+    if (Array.isArray(adaptationSet)) {
+        for (let representation of adaptationSet) {
+            if (Array.isArray(representation.Representation)) {
+                videoChannelRepresentations = representation.Representation;
             }
+        }
+    } else {
+        videoChannelRepresentations = adaptationSet.Representation;
+    }
+
+    if (videoChannelRepresentations) {
+        for (let vcr of videoChannelRepresentations) {
+            videoChannelUrls.push(VREDDIT_PATH + id + '/' + vcr.BaseURL);
         }
     }
 
