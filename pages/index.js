@@ -1,174 +1,212 @@
-import Head from 'next/head';
+import React, { useEffect } from 'react';
+import { Container, Typography, Box, TextField, Grid, Fab, LinearProgress } from '@material-ui/core';
+import Copyright from '../src/Copyright';
+import { makeStyles } from '@material-ui/core/styles';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import * as axios from 'axios';
 
-const Home = () => (
-    <div className="container">
-        <Head>
-            <title>vreddit-direct</title>
-            <link rel="icon" href="/favicon.ico" />
-        </Head>
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh'
+    },
+    main: {
+        marginTop: theme.spacing(8),
+        marginBottom: theme.spacing(2)
+    },
+    footer: {
+        padding: theme.spacing(3, 2),
+        marginTop: 'auto'
+    },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1)
+    }
+}));
 
-        <main>
-            <h1 className="title">vreddit-direct</h1>
+function ApiLoader({ isApiLoading }) {
+    if (isApiLoading) {
+        return <LinearProgress color="secondary" />;
+    } else {
+        return null;
+    }
+}
 
-            <p className="description">Insert some tagline here</p>
+function VideoPlayer({ channelData }) {
+    const [videoChannelUrl, setVideoChannelUrl] = React.useState(null);
+    const [audioChannelUrl, setAudioChannelUrl] = React.useState(null);
 
-            <div className="grid">
-                <div className="card">
-                    <video width="400" controls>
-                        <source src="https://v.redd.it/du1z36bp1zc51/DASH_720.mp4" type="video/mp4" />
-                        Your browser does not support HTML video.
-                    </video>
-                </div>
+    const showNativeMediaControls = false;
+
+    let videoRef = React.createRef();
+    let audioRef = React.createRef();
+
+    const [isPlaying, setIsPlaying] = React.useState(false);
+
+    useEffect(() => {
+        if (channelData.videoChannelUrls) {
+            setVideoChannelUrl(channelData.videoChannelUrls[channelData.videoChannelUrls.length - 1]);
+            console.log('videoChannelUrls got updated -', videoChannelUrl);
+
+            setAudioChannelUrl(channelData.audioChannelUrl);
+            console.log('audioChannelUrl got updated -', audioChannelUrl);
+        }
+    });
+
+    const togglePlayback = () => {
+        if (isPlaying) {
+            pauseMedia();
+        } else {
+            playMedia();
+        }
+    };
+
+    const playMedia = () => {
+        try {
+            videoRef.current.play();
+            audioRef.current.play();
+            setIsPlaying(true);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const pauseMedia = () => {
+        try {
+            videoRef.current.pause();
+            audioRef.current.pause();
+            setIsPlaying(false);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const GetMediaStateIcon = () => {
+        if (isPlaying) {
+            return <PauseIcon />;
+        } else {
+            return <PlayArrowIcon />;
+        }
+    };
+
+    if (videoChannelUrl === null) {
+        return null;
+    } else {
+        return (
+            <div className="video-player">
+                <center>
+                    <div>
+                        <video
+                            ref={videoRef}
+                            controls={showNativeMediaControls}
+                            width="100%"
+                            height="auto"
+                            src={videoChannelUrl}
+                            onPlay={() => {
+                                console.log('Video is playing');
+                                playMedia();
+                            }}
+                            onPause={() => {
+                                console.log('Video is paused');
+                                pauseMedia();
+                            }}
+                        ></video>
+                    </div>
+                    <br /><br />
+                    <Fab color="primary" aria-label="add" onClick={togglePlayback}>
+                        <GetMediaStateIcon />
+                    </Fab>
+                    <div>
+                        <video
+                            ref={audioRef}
+                            controls={showNativeMediaControls}
+                            src={audioChannelUrl}
+                            onPlay={() => {
+                                console.log('Audio is playing');
+                                playMedia();
+                            }}
+                            onPause={() => {
+                                console.log('Audio is paused');
+                                pauseMedia();
+                            }}
+                        ></video>
+                    </div>
+                </center>
             </div>
-        </main>
+        );
+    }
+}
 
-        <footer>
-            <a href="https://github.com/arkits" target="_blank" rel="noopener noreferrer">
-                @arkits
-            </a>
-        </footer>
+export default function Index() {
+    const classes = useStyles();
 
-        <style jsx>{`
-            .container {
-                min-height: 100vh;
-                padding: 0 0.5rem;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
+    const [iVRedditLink, setVRedditLink] = React.useState('');
+    const [isApiLoading, setIsApiLoading] = React.useState(false);
+    const [channelData, setChannelData] = React.useState({});
 
-            main {
-                padding: 3rem 0;
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
+    const loadDirectVideo = async () => {
+        console.log('We here!');
+        try {
+            setIsApiLoading(true);
+            let response = await axios.get('https://vreddit.vercel.app/api/direct?id=du1z36bp1zc51');
+            console.log(response.data);
 
-            footer {
-                width: 100%;
-                height: 100px;
-                border-top: 1px solid #eaeaea;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
+            setIsApiLoading(false);
+            setChannelData(response.data);
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
-            footer img {
-                margin-left: 0.5rem;
-            }
-
-            footer a {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            a {
-                color: inherit;
-                text-decoration: none;
-            }
-
-            .title a {
-                color: #0070f3;
-                text-decoration: none;
-            }
-
-            .title a:hover,
-            .title a:focus,
-            .title a:active {
-                text-decoration: underline;
-            }
-
-            .title {
-                margin: 0;
-                line-height: 1.15;
-                font-size: 4rem;
-            }
-
-            .title,
-            .description {
-                text-align: center;
-            }
-
-            .description {
-                line-height: 1.5;
-                font-size: 1.5rem;
-            }
-
-            code {
-                background: #fafafa;
-                border-radius: 5px;
-                padding: 0.75rem;
-                font-size: 1.1rem;
-                font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
-                    Courier New, monospace;
-            }
-
-            .grid {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-wrap: wrap;
-
-                max-width: 800px;
-                margin-top: 3rem;
-            }
-
-            .card {
-                margin: 1rem;
-                flex-basis: 45%;
-                padding: 1.5rem;
-                text-align: left;
-                color: inherit;
-                text-decoration: none;
-                border: 1px solid #eaeaea;
-                border-radius: 10px;
-                transition: color 0.15s ease, border-color 0.15s ease;
-            }
-
-            .card:hover,
-            .card:focus,
-            .card:active {
-                color: #0070f3;
-                border-color: #0070f3;
-            }
-
-            .card h3 {
-                margin: 0 0 1rem 0;
-                font-size: 1.5rem;
-            }
-
-            .card p {
-                margin: 0;
-                font-size: 1.25rem;
-                line-height: 1.5;
-            }
-
-            @media (max-width: 600px) {
-                .grid {
-                    width: 100%;
-                    flex-direction: column;
-                }
-            }
-        `}</style>
-
-        <style jsx global>{`
-            html,
-            body {
-                padding: 0;
-                margin: 0;
-                font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
-                    Droid Sans, Helvetica Neue, sans-serif;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-        `}</style>
-    </div>
-);
-
-export default Home;
+    return (
+        <div className={classes.root}>
+            <Container component="main" maxWidth="sm">
+                <Box my={4}>
+                    <Typography align="center" variant="h4" component="h1" gutterBottom>
+                        vreddit-direct
+                    </Typography>
+                    <Grid container spacing={1}>
+                        <Grid item xs={10}>
+                            <form noValidate autoComplete="off">
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Paste v.redd.it link..."
+                                    variant="outlined"
+                                    fullWidth
+                                    onChange={(e) => setVRedditLink(e.target.value)}
+                                />
+                            </form>
+                        </Grid>
+                        <Grid item xs={2} align="right">
+                            <Fab color="primary" aria-label="add" onClick={loadDirectVideo}>
+                                <GetAppIcon />
+                            </Fab>
+                        </Grid>
+                    </Grid>
+                    <br />
+                    <ApiLoader isApiLoading={isApiLoading} />
+                    <br />
+                    <VideoPlayer channelData={channelData} />
+                </Box>
+            </Container>
+            <footer className={classes.footer}>
+                <Container maxWidth="sm">
+                    <Copyright />
+                </Container>
+            </footer>
+        </div>
+    );
+}
