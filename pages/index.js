@@ -6,6 +6,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import * as axios from 'axios';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,12 +60,9 @@ function VideoPlayer({ channelData }) {
     useEffect(() => {
         if (channelData.videoChannelUrls) {
             setVideoChannelUrl(channelData.videoChannelUrls[channelData.videoChannelUrls.length - 1]);
-            console.log('videoChannelUrls got updated -', videoChannelUrl);
-
             setAudioChannelUrl(channelData.audioChannelUrl);
-            console.log('audioChannelUrl got updated -', audioChannelUrl);
         }
-    });
+    }, [channelData]);
 
     const togglePlayback = () => {
         if (isPlaying) {
@@ -127,6 +125,9 @@ function VideoPlayer({ channelData }) {
                                 console.log('Video is loading');
                                 pauseMedia();
                             }}
+                            onLoadedData={() => {
+                                console.log('Video finished loading');
+                            }}
                         ></video>
                     </div>
                     <br />
@@ -151,6 +152,9 @@ function VideoPlayer({ channelData }) {
                                 console.log('Audio is loading');
                                 pauseMedia();
                             }}
+                            onLoadedData={() => {
+                                console.log('Audio finished loading');
+                            }}
                         ></video>
                     </div>
                 </center>
@@ -166,25 +170,49 @@ export default function Index() {
     const [isApiLoading, setIsApiLoading] = React.useState(false);
     const [channelData, setChannelData] = React.useState({});
 
-    const loadDirectVideo = async () => {
-        console.log('We here!');
+    const [currentVideoId, setCurrentVideoId] = React.useState(null);
+
+    const router = useRouter();
+
+    useEffect(() => {
+        let videoIdFromRouter = router.query.v;
+        if (videoIdFromRouter) {
+            console.log('Had v in URL - ', videoIdFromRouter);
+            setCurrentVideoId(videoIdFromRouter);
+            loadDirectVideo(videoIdFromRouter);
+        }
+    }, [router]);
+
+    const loadDirectVideo = async (videoId) => {
         try {
-            let videoId = iVRedditLink.slice(18);
-            if (videoId.indexOf('/') != -1) {
-                videoId = videoId.slice(0, videoId.indexOf('/'));
+            if (videoId) {
+                console.log('Calling API', videoId);
+
+                setIsApiLoading(true);
+
+                let response = await axios.get(`https://vreddit.vercel.app/api/direct?id=${videoId}`);
+                // console.log(response.data);
+
+                setIsApiLoading(false);
+                setChannelData(response.data);
+            } else {
+                console.log('videoId not set');
             }
-            console.log(videoId);
-
-            setIsApiLoading(true);
-            let response = await axios.get(`https://vreddit.vercel.app/api/direct?id=${videoId}`);
-            console.log(response.data);
-
-            setIsApiLoading(false);
-            setChannelData(response.data);
         } catch (error) {
             console.error(error.message);
             setIsApiLoading(false);
         }
+    };
+
+    const updateVideoId = () => {
+        let videoId = iVRedditLink.slice(18);
+        if (videoId.indexOf('/') != -1) {
+            videoId = videoId.slice(0, videoId.indexOf('/'));
+        }
+        console.log(videoId);
+
+        setCurrentVideoId(videoId);
+        loadDirectVideo(videoId);
     };
 
     return (
@@ -207,7 +235,7 @@ export default function Index() {
                             </form>
                         </Grid>
                         <Grid item xs={2} align="right">
-                            <Fab color="primary" aria-label="add" onClick={loadDirectVideo}>
+                            <Fab color="primary" aria-label="add" onClick={updateVideoId}>
                                 <GetAppIcon />
                             </Fab>
                         </Grid>
