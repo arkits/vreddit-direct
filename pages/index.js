@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
-import { Container, Typography, Box, TextField, Grid, Fab, LinearProgress } from '@material-ui/core';
-import Copyright from '../src/Copyright';
-import { makeStyles } from '@material-ui/core/styles';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ShareIcon from '@material-ui/icons/Share';
 import * as axios from 'axios';
 import { useRouter } from 'next/router';
+import { Container, Typography, Box, TextField, Grid, Fab, LinearProgress } from '@material-ui/core';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { makeStyles } from '@material-ui/core/styles';
+import Copyright from '../src/Copyright';
+import VideoPlayer from '../src/VideoPlayer';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,16 +21,6 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(3, 2),
         marginTop: 'auto'
     },
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main
-    },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1)
@@ -44,141 +32,6 @@ function ApiLoader({ isApiLoading }) {
         return <LinearProgress color="secondary" />;
     } else {
         return null;
-    }
-}
-
-function VideoPlayer({ channelData }) {
-    const [videoChannelUrl, setVideoChannelUrl] = React.useState(null);
-    const [audioChannelUrl, setAudioChannelUrl] = React.useState(null);
-
-    const showNativeMediaControls = false;
-
-    let videoRef = React.createRef();
-    let audioRef = React.createRef();
-
-    const [isPlaying, setIsPlaying] = React.useState(false);
-
-    useEffect(() => {
-        if (channelData.videoChannelUrls) {
-            setVideoChannelUrl(channelData.videoChannelUrls[channelData.videoChannelUrls.length - 1]);
-            setAudioChannelUrl(channelData.audioChannelUrl);
-        }
-    }, [channelData]);
-
-    const togglePlayback = () => {
-        if (isPlaying) {
-            pauseMedia();
-        } else {
-            playMedia();
-        }
-    };
-
-    const playMedia = () => {
-        try {
-            videoRef.current.play();
-            audioRef.current.play();
-            setIsPlaying(true);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const pauseMedia = () => {
-        try {
-            videoRef.current.pause();
-            audioRef.current.pause();
-            setIsPlaying(false);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const GetMediaStateIcon = () => {
-        if (isPlaying) {
-            return <PauseIcon />;
-        } else {
-            return <PlayArrowIcon />;
-        }
-    };
-
-    const copyShareableLink = () => {
-        const prodUrl = 'https://vreddit.vercel.app/';
-        navigator.clipboard.writeText(prodUrl + '?vid=' + channelData.videoId);
-    };
-
-    if (videoChannelUrl === null) {
-        return null;
-    } else {
-        return (
-            <div className="video-player">
-                <div>
-                    <video
-                        ref={videoRef}
-                        controls={showNativeMediaControls}
-                        width="100%"
-                        height="auto"
-                        src={videoChannelUrl}
-                        onPlay={() => {
-                            console.log('Video is playing');
-                            playMedia();
-                        }}
-                        onPause={() => {
-                            console.log('Video is paused');
-                            pauseMedia();
-                        }}
-                        onLoadStart={() => {
-                            console.log('Video is loading');
-                            pauseMedia();
-                        }}
-                        onLoadedData={() => {
-                            console.log('Video finished loading');
-                        }}
-                    ></video>
-                </div>
-                <br />
-                <br />
-
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}
-                >
-                    <div style={{ flexGrow: '1' }}>
-                        <Fab color="primary" aria-label="add" onClick={togglePlayback}>
-                            <GetMediaStateIcon />
-                        </Fab>
-                    </div>
-                    <div style={{}}>
-                        <Fab color="secondary" onClick={copyShareableLink} variant="extended">
-                            <ShareIcon style={{ marginRight: '15px' }} /> Copy Shareable Link
-                        </Fab>
-                    </div>
-                </div>
-                <div>
-                    <video
-                        ref={audioRef}
-                        controls={showNativeMediaControls}
-                        src={audioChannelUrl}
-                        onPlay={() => {
-                            console.log('Audio is playing');
-                            playMedia();
-                        }}
-                        onPause={() => {
-                            console.log('Audio is paused');
-                            pauseMedia();
-                        }}
-                        onLoadStart={() => {
-                            console.log('Audio is loading');
-                            pauseMedia();
-                        }}
-                        onLoadedData={() => {
-                            console.log('Audio finished loading');
-                        }}
-                    ></video>
-                </div>
-            </div>
-        );
     }
 }
 
