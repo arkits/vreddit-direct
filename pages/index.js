@@ -123,9 +123,14 @@ function VideoPlayer({ channelData }) {
                                 console.log('Video is paused');
                                 pauseMedia();
                             }}
+                            onLoadStart={() => {
+                                console.log('Video is loading');
+                                pauseMedia();
+                            }}
                         ></video>
                     </div>
-                    <br /><br />
+                    <br />
+                    <br />
                     <Fab color="primary" aria-label="add" onClick={togglePlayback}>
                         <GetMediaStateIcon />
                     </Fab>
@@ -142,6 +147,10 @@ function VideoPlayer({ channelData }) {
                                 console.log('Audio is paused');
                                 pauseMedia();
                             }}
+                            onLoadStart={() => {
+                                console.log('Audio is loading');
+                                pauseMedia();
+                            }}
                         ></video>
                     </div>
                 </center>
@@ -153,21 +162,28 @@ function VideoPlayer({ channelData }) {
 export default function Index() {
     const classes = useStyles();
 
-    const [iVRedditLink, setVRedditLink] = React.useState('');
+    const [iVRedditLink, setVRedditLink] = React.useState('https://v.redd.it/du1z36bp1zc51');
     const [isApiLoading, setIsApiLoading] = React.useState(false);
     const [channelData, setChannelData] = React.useState({});
 
     const loadDirectVideo = async () => {
         console.log('We here!');
         try {
+            let videoId = iVRedditLink.slice(18);
+            if (videoId.indexOf('/') != -1) {
+                videoId = videoId.slice(0, videoId.indexOf('/'));
+            }
+            console.log(videoId);
+
             setIsApiLoading(true);
-            let response = await axios.get('https://vreddit.vercel.app/api/direct?id=du1z36bp1zc51');
+            let response = await axios.get(`https://vreddit.vercel.app/api/direct?id=${videoId}`);
             console.log(response.data);
 
             setIsApiLoading(false);
             setChannelData(response.data);
         } catch (error) {
             console.error(error.message);
+            setIsApiLoading(false);
         }
     };
 
