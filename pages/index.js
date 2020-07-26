@@ -83,8 +83,15 @@ export default function Index() {
         }
         console.log(videoId);
 
-        setCurrentVideoId(videoId);
-        loadDirectVideo(videoId);
+        router.push({
+            pathname: '/',
+            search: new URLSearchParams({
+                vid: videoId
+            })
+        });
+
+        // setCurrentVideoId(videoId);
+        // loadDirectVideo(videoId);
     };
 
     return (
