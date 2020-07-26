@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { Fab, CircularProgress, Card, CardContent, Typography, Button, ButtonGroup, Grid } from '@material-ui/core';
+import { Fab, CircularProgress, Typography, Button, ButtonGroup, Grid } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import ShareIcon from '@material-ui/icons/Share';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 function MediaLoadingIndicator({ isLoading }) {
     if (isLoading) {
@@ -171,29 +172,15 @@ export default function VideoPlayer({ channelData }) {
                     </div>
                     <div style={{}}>
                         <Fab color="secondary" onClick={copyShareableLink} variant="extended">
-                            <ShareIcon style={{ marginRight: '15px' }} /> Copy Shareable Link
+                            <ShareIcon style={{ marginRight: '15px' }} /> Shareable Link
                         </Fab>
                     </div>
                 </div>
-                <div style={{ marginTop: '20px' }}>
-                    <Card>
-                        <CardContent>
-                            <Typography color="textSecondary" gutterBottom>
-                                Details
-                            </Typography>
-                            <div style={{ lineHeight: '1.5rem' }}>
-                                Video ID: <code>{channelData.videoId}</code> <br />
-                                Audio Channel: <code>{channelData.audioChannelUrl}</code> <br />
-                                Video Channels: <code>
-                                    {JSON.stringify(channelData.videoChannelUrls, null, 2)}
-                                </code>{' '}
-                                <br />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
                 <div>
                     <video
+                        style={{
+                            display: 'none'
+                        }}
                         ref={audioRef}
                         controls={showNativeMediaControls}
                         src={audioChannelUrl}

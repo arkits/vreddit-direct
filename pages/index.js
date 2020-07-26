@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import * as axios from 'axios';
 import { useRouter } from 'next/router';
-import { Container, Typography, Box, TextField, Grid, Fab, LinearProgress } from '@material-ui/core';
+import { Container, Typography, Box, TextField, Grid, Fab, LinearProgress, Card, CardContent } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { makeStyles } from '@material-ui/core/styles';
 import Copyright from '../src/Copyright';
 import VideoPlayer from '../src/VideoPlayer';
+import DetailsCard from '../src/DetailsCard';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,9 +28,28 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function ApiLoader({ isApiLoading }) {
+function ApiLoadingIndicator({ isApiLoading }) {
     if (isApiLoading) {
         return <LinearProgress color="secondary" />;
+    } else {
+        return null;
+    }
+}
+
+function ApiErrorCard({ error }) {
+    if (error?.show) {
+        return (
+            <Card
+                style={{
+                    backgroundColor: '#f44336'
+                }}
+            >
+                <CardContent>
+                    <Typography variant="h6">Something went wrong!</Typography>
+                    <Typography variant="body1">Invalid videoID</Typography>
+                </CardContent>
+            </Card>
+        );
     } else {
         return null;
     }
@@ -41,6 +61,8 @@ export default function Index() {
     const [iVRedditLink, setVRedditLink] = React.useState('https://v.redd.it/du1z36bp1zc51');
     const [isApiLoading, setIsApiLoading] = React.useState(false);
     const [channelData, setChannelData] = React.useState({});
+    const [metadata, setMetadata] = React.useState({});
+    const [apiError, setApiError] = React.useState({});
 
     const [currentVideoId, setCurrentVideoId] = React.useState(null);
 
@@ -59,20 +81,46 @@ export default function Index() {
         try {
             if (videoId) {
                 console.log('Calling API', videoId);
+                setApiError({});
 
                 setIsApiLoading(true);
 
-                let response = await axios.get(`https://vreddit.vercel.app/api/direct?id=${videoId}`);
-                // console.log(response.data);
+                getMetadata(videoId);
+                let directResponse = await axios.get(`https://vreddit.vercel.app/api/direct?id=${videoId}`);
 
                 setIsApiLoading(false);
-                setChannelData(response.data);
+                setChannelData(directResponse.data);
             } else {
                 console.log('videoId not set');
             }
         } catch (error) {
             console.error(error.message);
             setIsApiLoading(false);
+            setApiError({
+                show: true,
+                message: error.message
+            });
+        }
+    };
+
+    const getMetadata = (videoId) => {
+        try {
+            console.log('Getting Metadata - ', videoId);
+            axios
+                .get(`https://vreddit.vercel.app/api/metadata?id=${videoId}`)
+                .then((response) => {
+                    console.log('Got Metadata - ', response.data);
+                    setMetadata(response.data);
+                })
+                .catch((error) => {
+                    console.error('Caught Error in getMetadata - ', error);
+                });
+        } catch (error) {
+            console.error(error.message);
+            setApiError({
+                show: true,
+                message: error.message
+            });
         }
     };
 
@@ -89,9 +137,14 @@ export default function Index() {
                 vid: videoId
             })
         });
+    };
 
-        // setCurrentVideoId(videoId);
-        // loadDirectVideo(videoId);
+    const ConditionallyShowDetailsCard = () => {
+        if (apiError.show) {
+            return null;
+        } else {
+            return <DetailsCard channelData={channelData} metadata={metadata} />;
+        }
     };
 
     return (
@@ -109,6 +162,7 @@ export default function Index() {
                                     label="Paste v.redd.it link..."
                                     variant="outlined"
                                     fullWidth
+                                    color="secondary"
                                     onChange={(e) => setVRedditLink(e.target.value)}
                                 />
                             </form>
@@ -120,9 +174,11 @@ export default function Index() {
                         </Grid>
                     </Grid>
                     <br />
-                    <ApiLoader isApiLoading={isApiLoading} />
+                    <ApiLoadingIndicator isApiLoading={isApiLoading} />
+                    <ApiErrorCard error={apiError} />
                     <br />
                     <VideoPlayer channelData={channelData} />
+                    <ConditionallyShowDetailsCard />
                 </Box>
             </Container>
             <footer className={classes.footer}>
