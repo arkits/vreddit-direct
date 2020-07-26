@@ -86,10 +86,6 @@ export default function VideoPlayer({ channelData }) {
                     prettyQuality = prettyQuality.slice(dashPath.length);
                 }
 
-                if (prettyQuality.endsWith(mp4Path)) {
-                    prettyQuality = prettyQuality.slice(0, mp4Path.length - 1);
-                }
-
                 buttons.push(
                     <Button
                         key={prettyQuality}
@@ -163,18 +159,20 @@ export default function VideoPlayer({ channelData }) {
                                     <GetMediaStateIcon />
                                 </Fab>
                             </Grid>
-                            <Grid item xs={12} sm={6} style={{ marginTop: '10px' }}>
+                            <Grid item xs={12} sm={8} style={{ marginTop: '10px' }}>
                                 <ButtonGroup variant="contained" color="primary" aria-label="Quality buttons">
                                     <IterateQualityButtons />
                                 </ButtonGroup>
                             </Grid>
+                            <Grid item xs={12} sm={3}>
+                                <Fab color="secondary" onClick={copyShareableLink} variant="extended">
+                                    <ShareIcon style={{ marginRight: '15px' }} /> Shareable Link
+                                </Fab>
+                            </Grid>
                         </Grid>
                     </div>
-                    <div style={{}}>
-                        <Fab color="secondary" onClick={copyShareableLink} variant="extended">
-                            <ShareIcon style={{ marginRight: '15px' }} /> Shareable Link
-                        </Fab>
-                    </div>
+                    <div style={{}}></div>
+                    <div style={{}}></div>
                 </div>
                 <div>
                     <video
