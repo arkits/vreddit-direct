@@ -89,7 +89,7 @@ export default function Index() {
 
     return (
         <div className={classes.root}>
-            <Container component="main" maxWidth="sm">
+            <Container component="main" maxWidth="md">
                 <Box my={4}>
                     <Typography align="center" variant="h4" component="h1" gutterBottom>
                         vreddit-direct

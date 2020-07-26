@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Fab, CircularProgress } from '@material-ui/core';
+import { Fab, CircularProgress, Card, CardContent, Typography } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import ShareIcon from '@material-ui/icons/Share';
@@ -106,13 +106,12 @@ export default function VideoPlayer({ channelData }) {
                         }}
                     ></video>
                 </div>
-                <br />
-                <br />
 
                 <div
                     style={{
                         display: 'flex',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        marginTop: '20px'
                     }}
                 >
                     <div style={{ flexGrow: '1' }}>
@@ -125,6 +124,23 @@ export default function VideoPlayer({ channelData }) {
                             <ShareIcon style={{ marginRight: '15px' }} /> Copy Shareable Link
                         </Fab>
                     </div>
+                </div>
+                <div style={{ marginTop: '20px' }}>
+                    <Card>
+                        <CardContent>
+                            <Typography color="textSecondary" gutterBottom>
+                                🤔 Details
+                            </Typography>
+                            <div style={{ lineHeight: '1.5rem' }}>
+                                Video ID: <code>{channelData.videoId}</code> <br />
+                                Audio Channel: <code>{channelData.audioChannelUrl}</code> <br />
+                                Video Channels: <code>
+                                    {JSON.stringify(channelData.videoChannelUrls, null, 2)}
+                                </code>{' '}
+                                <br />
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
                 <div>
                     <video
