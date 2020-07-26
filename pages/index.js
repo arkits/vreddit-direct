@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import ShareIcon from '@material-ui/icons/Share';
 import * as axios from 'axios';
 import { useRouter } from 'next/router';
 
@@ -100,64 +101,82 @@ function VideoPlayer({ channelData }) {
         }
     };
 
+    const copyShareableLink = () => {
+        const prodUrl = 'https://vreddit.vercel.app/';
+        navigator.clipboard.writeText(prodUrl + '?vid=' + channelData.videoId);
+    };
+
     if (videoChannelUrl === null) {
         return null;
     } else {
         return (
             <div className="video-player">
-                <center>
-                    <div>
-                        <video
-                            ref={videoRef}
-                            controls={showNativeMediaControls}
-                            width="100%"
-                            height="auto"
-                            src={videoChannelUrl}
-                            onPlay={() => {
-                                console.log('Video is playing');
-                                playMedia();
-                            }}
-                            onPause={() => {
-                                console.log('Video is paused');
-                                pauseMedia();
-                            }}
-                            onLoadStart={() => {
-                                console.log('Video is loading');
-                                pauseMedia();
-                            }}
-                            onLoadedData={() => {
-                                console.log('Video finished loading');
-                            }}
-                        ></video>
+                <div>
+                    <video
+                        ref={videoRef}
+                        controls={showNativeMediaControls}
+                        width="100%"
+                        height="auto"
+                        src={videoChannelUrl}
+                        onPlay={() => {
+                            console.log('Video is playing');
+                            playMedia();
+                        }}
+                        onPause={() => {
+                            console.log('Video is paused');
+                            pauseMedia();
+                        }}
+                        onLoadStart={() => {
+                            console.log('Video is loading');
+                            pauseMedia();
+                        }}
+                        onLoadedData={() => {
+                            console.log('Video finished loading');
+                        }}
+                    ></video>
+                </div>
+                <br />
+                <br />
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}
+                >
+                    <div style={{ flexGrow: '1' }}>
+                        <Fab color="primary" aria-label="add" onClick={togglePlayback}>
+                            <GetMediaStateIcon />
+                        </Fab>
                     </div>
-                    <br />
-                    <br />
-                    <Fab color="primary" aria-label="add" onClick={togglePlayback}>
-                        <GetMediaStateIcon />
-                    </Fab>
-                    <div>
-                        <video
-                            ref={audioRef}
-                            controls={showNativeMediaControls}
-                            src={audioChannelUrl}
-                            onPlay={() => {
-                                console.log('Audio is playing');
-                                playMedia();
-                            }}
-                            onPause={() => {
-                                console.log('Audio is paused');
-                                pauseMedia();
-                            }}
-                            onLoadStart={() => {
-                                console.log('Audio is loading');
-                                pauseMedia();
-                            }}
-                            onLoadedData={() => {
-                                console.log('Audio finished loading');
-                            }}
-                        ></video>
+                    <div style={{}}>
+                        <Fab color="secondary" onClick={copyShareableLink} variant="extended">
+                            <ShareIcon style={{ marginRight: '15px' }} /> Copy Shareable Link
+                        </Fab>
                     </div>
-                </center>
+                </div>
+                <div>
+                    <video
+                        ref={audioRef}
+                        controls={showNativeMediaControls}
+                        src={audioChannelUrl}
+                        onPlay={() => {
+                            console.log('Audio is playing');
+                            playMedia();
+                        }}
+                        onPause={() => {
+                            console.log('Audio is paused');
+                            pauseMedia();
+                        }}
+                        onLoadStart={() => {
+                            console.log('Audio is loading');
+                            pauseMedia();
+                        }}
+                        onLoadedData={() => {
+                            console.log('Audio finished loading');
+                        }}
+                    ></video>
+                </div>
             </div>
         );
     }
@@ -175,9 +194,9 @@ export default function Index() {
     const router = useRouter();
 
     useEffect(() => {
-        let videoIdFromRouter = router.query.v;
+        let videoIdFromRouter = router.query.vid;
         if (videoIdFromRouter) {
-            console.log('Had v in URL - ', videoIdFromRouter);
+            console.log('Had vid in URL - ', videoIdFromRouter);
             setCurrentVideoId(videoIdFromRouter);
             loadDirectVideo(videoIdFromRouter);
         }
