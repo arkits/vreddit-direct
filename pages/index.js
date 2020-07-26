@@ -140,7 +140,7 @@ export default function Index() {
     };
 
     const ConditionallyShowDetailsCard = () => {
-        if (apiError.show) {
+        if (apiError.show || !currentVideoId) {
             return null;
         } else {
             return <DetailsCard channelData={channelData} metadata={metadata} />;
@@ -156,7 +156,7 @@ export default function Index() {
                     </Typography>
                     <Grid container spacing={1}>
                         <Grid item xs={10}>
-                            <form noValidate autoComplete="off">
+                            <form noValidate autoComplete="off" onSubmit={updateVideoId}>
                                 <TextField
                                     id="outlined-basic"
                                     label="Paste v.redd.it link..."
