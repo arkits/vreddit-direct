@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Fab, CircularProgress, Card, CardContent, Typography } from '@material-ui/core';
+import { Fab, CircularProgress, Card, CardContent, Typography, Button, ButtonGroup, Grid } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import ShareIcon from '@material-ui/icons/Share';
@@ -67,6 +67,47 @@ export default function VideoPlayer({ channelData }) {
         }
     };
 
+    const IterateQualityButtons = () => {
+        if (channelData.videoChannelUrls.length > 0) {
+            let buttons = [];
+            let basePath = 'https://v.redd.it/' + channelData.videoId;
+            let dashPath = '/DASH_';
+            let mp4Path = '.mp4';
+
+            for (let videoChannelUrl of channelData.videoChannelUrls) {
+                let prettyQuality = videoChannelUrl.slice(basePath.length);
+
+                if (prettyQuality.startsWith(dashPath)) {
+                    prettyQuality = prettyQuality.slice(dashPath.length);
+                }
+
+                if (prettyQuality.startsWith(dashPath)) {
+                    prettyQuality = prettyQuality.slice(dashPath.length);
+                }
+
+                if (prettyQuality.endsWith(mp4Path)) {
+                    prettyQuality = prettyQuality.slice(0, mp4Path.length - 1);
+                }
+
+                buttons.push(
+                    <Button
+                        key={prettyQuality}
+                        onClick={() => {
+                            console.log('Switching quality -', videoChannelUrl);
+                            setVideoChannelUrl(videoChannelUrl);
+                        }}
+                    >
+                        {prettyQuality}
+                    </Button>
+                );
+            }
+
+            return buttons;
+        } else {
+            return null;
+        }
+    };
+
     const copyShareableLink = () => {
         const prodUrl = 'https://vreddit.vercel.app/';
         navigator.clipboard.writeText(prodUrl + '?vid=' + channelData.videoId);
@@ -115,9 +156,18 @@ export default function VideoPlayer({ channelData }) {
                     }}
                 >
                     <div style={{ flexGrow: '1' }}>
-                        <Fab color="primary" aria-label="add" onClick={togglePlayback}>
-                            <GetMediaStateIcon />
-                        </Fab>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={1}>
+                                <Fab color="primary" aria-label="add" onClick={togglePlayback}>
+                                    <GetMediaStateIcon />
+                                </Fab>
+                            </Grid>
+                            <Grid item xs={12} sm={6} style={{ marginTop: '10px' }}>
+                                <ButtonGroup variant="contained" color="primary" aria-label="Quality buttons">
+                                    <IterateQualityButtons />
+                                </ButtonGroup>
+                            </Grid>
+                        </Grid>
                     </div>
                     <div style={{}}>
                         <Fab color="secondary" onClick={copyShareableLink} variant="extended">
@@ -129,7 +179,7 @@ export default function VideoPlayer({ channelData }) {
                     <Card>
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
-                                🤔 Details
+                                Details
                             </Typography>
                             <div style={{ lineHeight: '1.5rem' }}>
                                 Video ID: <code>{channelData.videoId}</code> <br />
