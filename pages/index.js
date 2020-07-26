@@ -129,7 +129,7 @@ export default function Index() {
         if (videoId.indexOf('/') != -1) {
             videoId = videoId.slice(0, videoId.indexOf('/'));
         }
-        console.log(videoId);
+        console.log('updateVideoId - ', videoId);
 
         router.push({
             pathname: '/',
@@ -156,7 +156,14 @@ export default function Index() {
                     </Typography>
                     <Grid container spacing={1}>
                         <Grid item xs={10}>
-                            <form noValidate autoComplete="off" onSubmit={updateVideoId}>
+                            <form
+                                noValidate
+                                autoComplete="off"
+                                onSubmit={() => {
+                                    event.preventDefault();
+                                    updateVideoId();
+                                }}
+                            >
                                 <TextField
                                     id="outlined-basic"
                                     label="Paste v.redd.it link..."
