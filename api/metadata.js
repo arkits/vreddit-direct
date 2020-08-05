@@ -1,6 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const allowCors = require('../../utils/cors');
+const allowCors = require('./cors');
 
 const VREDDIT_PATH = 'https://v.redd.it/';
 

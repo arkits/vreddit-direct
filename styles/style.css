@@ -1,0 +1,40 @@
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.container {
+    width: auto;
+    max-width: 680px;
+    padding: 0 15px;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+
+.header {
+    margin-bottom: 15px;
+}
+.header h1 {
+    text-align: center;
+}
+
+#video-group {
+    margin-bottom: 15px;
+}
+
+#quality-button-group {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.footer {
+    text-align: center;
+}

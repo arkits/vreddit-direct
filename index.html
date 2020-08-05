@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>vreddit-direct</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script type="text/javascript" src="js/popcorn.js"></script>
+    <link href="styles/style.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column h-100">
+    <main class="flex-shrink-0">
+        <div class="container">
+
+            <div class="header">
+                <h1 class="mt-5 center">vreddit-direct</h1>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Paste v.redd.it link here..."
+                        aria-label="Paste v.redd.it link here..." id="video-link-form" autocomplete="off">
+                    <button class="btn btn-primary" type="button" id="video-link-form-button"
+                        onclick="videoLinkUpdate()">Go!</button>
+                </div>
+
+                <div id="video-group">
+                    <video id="media-video" preload="auto" width="100%">
+                        <source src="">
+                        </source>
+                    </video>
+                    <audio id="media-audio" preload="auto" width="100%" controls>
+                        <source src="">
+                        </source>
+                    </audio>
+                </div>
+
+                <div id="quality-button-group">
+                    <div id="quality-buttons" class="btn-group" role="group" aria-label="Video quality buttons">
+                    </div>
+                </div>
+
+                <div id="metadata-group"></div>
+
+            </div>
+
+        </div>
+    </main>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <div class="center">
+                <span class="text-muted">
+                    <a href="https://github.com/arkits/vreddit-direct" target="_blank">vreddit-direct</a>
+                    · <a href="https://github.com/arkits" target="_blank">arkits</a></span>
+            </div>
+        </div>
+    </footer>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

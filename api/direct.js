@@ -1,6 +1,6 @@
 const axios = require('axios');
-const xmlToJson = require('../../utils/xml');
-const allowCors = require('../../utils/cors');
+const xmlToJson = require('./xml');
+const allowCors = require('./cors');
 
 const VREDDIT_PATH = 'https://v.redd.it/';
 const DASH_PLAYLIST_PATH = '/DASHPlaylist.mpd';

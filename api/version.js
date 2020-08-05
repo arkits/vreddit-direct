@@ -1,4 +1,4 @@
-const allowCors = require('../../utils/cors');
+const allowCors = require('./cors');
 
 function getVersion(req, res) {
     res.json({
