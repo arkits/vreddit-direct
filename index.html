@@ -1,62 +1,101 @@
 <!doctype html>
-<html lang="en" class="h-100">
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
     <title>vreddit-direct</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
-        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
-    <script type="text/javascript" src="js/popcorn.js"></script>
-    <link href="styles/style.css" rel="stylesheet">
+    <meta name="description" content="Generate direct links to v.redd.it videos!">
+    <meta name="keywords" content="reddit, video, v.redd.it">
+    <link href="https://fonts.googleapis.com/css2?family=Recursive:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 
-<body class="d-flex flex-column h-100">
-    <main class="flex-shrink-0">
+<body>
+    <main>
         <div class="container">
-
-            <div class="header">
-                <h1 class="mt-5 center">vreddit-direct</h1>
-
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Paste v.redd.it link here..."
-                        aria-label="Paste v.redd.it link here..." id="video-link-form" autocomplete="off">
-                    <button class="btn btn-primary" type="button" id="video-link-form-button"
-                        onclick="videoLinkUpdate()">Go!</button>
-                </div>
-
-                <div id="video-group">
-                    <video id="media-video" preload="auto" width="100%">
-                        <source src="">
-                        </source>
-                    </video>
-                    <audio id="media-audio" preload="auto" width="100%" controls>
-                        <source src="">
-                        </source>
-                    </audio>
-                </div>
-
-                <div id="quality-button-group">
-                    <div id="quality-buttons" class="btn-group" role="group" aria-label="Video quality buttons">
+            <div class="row">
+                <div class="col s12 m8 offset-m2">
+                    <div class="header">
+                        <h3 class="white-text bold">vreddit-direct</h3>
+                        <div class="row">
+                            <div class="card-panel">
+                                Generate direct links to v.redd.it videos!
+                                <br />
+                                <div class="video-link-form-box">
+                                    <div class="video-link-input-box">
+                                        <form>
+                                            <div class="input-field">
+                                                <input id="video-link-form" type="text">
+                                                <label for="text">Paste a v.redd.it link here...</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div>
+                                        <a class="btn-floating btn-large waves-effect waves-light orange darken-2"
+                                            onclick="videoLinkUpdate()"><i class="material-icons">add</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <center>
+
+                        <div id="video-loading-indicator">
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h6 class="white-text">Waiting for video to load...</h6>
+                        </div>
+
+                        <div id="video-group">
+                            <video id="media-video" preload="auto" width="100%">
+                                <source src="">
+                                </source>
+                            </video>
+                            <br /><br />
+                            <audio id="media-audio" preload="auto" width="100%" controls>
+                                <source src="">
+                                </source>
+                            </audio>
+                            <br /><br />
+                            <div id="quality-buttons" class="btn-group" role="group" aria-label="Video quality buttons">
+                            </div>
+                        </div>
+
+                    </center>
+
+                    <div class="progress" id="api-loading-bar">
+                        <div class="indeterminate"></div>
+                    </div>
+
+                    <div id="metadata-group" class="white-text"></div>
                 </div>
-
-                <div id="metadata-group"></div>
-
             </div>
+
 
         </div>
     </main>
-    <footer class="footer mt-auto py-3 bg-light">
+    <footer class="page-footer orange darken-2">
         <div class="container">
-            <div class="center">
-                <span class="text-muted">
-                    <a href="https://github.com/arkits/vreddit-direct" target="_blank">vreddit-direct</a>
-                    · <a href="https://github.com/arkits" target="_blank">arkits</a></span>
+            <div class="row">
+                <h6 class="white-text center bold">vreddit-direct :: @arkits</h6>
             </div>
         </div>
     </footer>
+    <script src="js/popcorn.js"></script>
     <script src="js/app.js"></script>
 </body>
 

@@ -44,6 +44,9 @@ function pageOnLoad() {
 }
 
 function loadPageContent() {
+    document.getElementById('api-loading-bar').style.visibility = 'visible';
+    document.getElementById('video-loading-indicator').style.visibility = 'visible';
+
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
@@ -62,6 +65,10 @@ function loadPageContent() {
                 let videoUrl = body.videoChannelUrls[videoIndex];
                 let videoE = document.getElementById('media-video');
                 videoE.src = videoUrl;
+                videoE.oncanplay = function () {
+                    document.getElementById('video-loading-indicator').style.display = 'none';
+                    document.getElementById('video-group').style.visibility = 'visible';
+                };
 
                 let audioUrl = body.audioChannelUrl;
                 let audioE = document.getElementById('media-audio');
@@ -86,9 +93,9 @@ function loadPageContent() {
                     qualityButton.type = 'button';
 
                     if (qualityIndex - 1 == index) {
-                        qualityButton.className = 'btn btn-outline-secondary active';
+                        qualityButton.className = 'btn';
                     } else {
-                        qualityButton.className = 'btn btn-outline-secondary';
+                        qualityButton.className = 'btn-flat';
                     }
 
                     qualityButton.innerHTML = prettyQuality;
@@ -115,12 +122,13 @@ function loadPageContent() {
 
     fetch('https://vreddit.vercel.app/api/metadata?id=' + videoId, requestOptions)
         .then((response) => {
+            document.getElementById('api-loading-bar').style.display = 'none';
+
             response.json().then(function (body) {
                 console.log('/api/metadata response -', body);
 
                 let metadataGroup = document.getElementById('metadata-group');
-
-                let title = document.createElement('h4');
+                let title = document.createElement('h5');
                 title.innerHTML = body.title;
                 metadataGroup.appendChild(title);
             });
