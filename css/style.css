@@ -38,3 +38,8 @@ main {
 #video-group {
     visibility: hidden;
 }
+
+.clean-link {
+    color: white;
+    text-decoration: underline;
+}

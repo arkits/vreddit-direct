@@ -89,13 +89,13 @@ function loadPageContent() {
                         prettyQuality = prettyQuality.slice(dashPath.length);
                     }
 
-                    let qualityButton = document.createElement('button');
+                    let qualityButton = document.createElement('a');
                     qualityButton.type = 'button';
 
                     if (qualityIndex - 1 == index) {
-                        qualityButton.className = 'btn';
+                        qualityButton.className = 'waves-effect waves-teal btn';
                     } else {
-                        qualityButton.className = 'btn-flat';
+                        qualityButton.className = 'waves-effect waves-teal btn-flat';
                     }
 
                     qualityButton.innerHTML = prettyQuality;
